@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartBiz Market Research Questionnaire | OMXE Technologies</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{--brand:#0f4c81;--ink:#1f2733;--muted:#667085;--line:#e3e8ef;--bg:#f4f7fb}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .page{max-width:860px;margin:0 auto;padding:0 16px 64px}
+  .hero{background:linear-gradient(135deg,#0f4c81,#1367a8 55%,#1a9e78 130%);color:#fff;border-radius:0 0 22px 22px;padding:34px 28px 30px;margin:0 -16px 26px;box-shadow:0 10px 30px rgba(15,76,129,.18)}
+  .hero .brand{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;opacity:.85;margin-bottom:12px}
+  .hero h1{margin:0 0 10px;font-size:26px;line-height:1.25;font-weight:800}
+  .hero p{margin:0;font-size:14.5px;opacity:.92;max-width:640px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 20px 8px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .card h2{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);margin:0 0 16px;font-weight:800;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .note{font-size:14px;color:var(--muted);margin:0 0 16px}
+  .field{margin-bottom:16px}
+  .field>label{display:block;font-weight:700;font-size:14.5px;margin-bottom:7px}
+  .req{color:#d92d20}
+  .hint{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+  input[type=text],textarea{width:100%;padding:11px 13px;font-size:15px;font-family:inherit;color:var(--ink);border:1px solid var(--line);border-radius:10px;background:#fff;outline:none;transition:.15s}
+  input[type=text]:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(15,76,129,.12)}
+  textarea{resize:vertical;min-height:64px}
+  .q{padding:14px 0 16px;border-bottom:1px dashed #eaeef4}.q:last-child{border-bottom:none}
+  .q-label{display:flex;gap:9px;font-weight:700;font-size:14.5px;margin-bottom:11px}
+  .q-num{flex:0 0 auto;min-width:24px;height:24px;padding:0 6px;border-radius:7px;background:#eef4fb;color:var(--brand);font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;margin-top:-1px}
+  .options{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+  .opt{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;font-size:14.5px;transition:.15s}
+  .opt:hover{border-color:#b7c7dc;background:#fbfcfe}
+  .opt input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--brand);cursor:pointer}
+  .opt.checked{border-color:var(--brand);background:#eef4fb;box-shadow:0 0 0 2px rgba(15,76,129,.12)}
+  .other-input{margin-top:9px;max-width:360px}.other-input[hidden]{display:none!important}
+  table.features{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:13.5px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  table.features th{background:#eef4fb;color:var(--brand);text-align:left;padding:9px 12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  table.features td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  table.features td:first-child{font-weight:600;white-space:nowrap}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .btn{font:inherit;font-weight:700;font-size:15px;padding:13px 22px;border-radius:12px;border:1px solid transparent;cursor:pointer;transition:.15s}
+  .btn.primary{background:linear-gradient(135deg,#0f4c81,#1367a8);color:#fff;flex:1 1 260px;box-shadow:0 8px 20px rgba(15,76,129,.25)}
+  .btn.primary:hover{transform:translateY(-1px)}
+  .btn.primary:disabled{opacity:.75;cursor:progress;transform:none}
+  .btn.ghost{background:#fff;border-color:var(--line);color:var(--muted)}
+  .actions-foot{margin-top:14px}
+  .wa-fallback{display:none;align-items:center;gap:9px;text-decoration:none;background:#e7f9ef;border:1px solid #b7e4c9;color:#0b6b3a;padding:12px 18px;border-radius:12px;font-weight:700;font-size:14.5px}
+  .wa-fallback.show{display:inline-flex}
+  .send-note{display:none;margin-top:12px;font-size:13.5px;line-height:1.55;background:#f0f7ff;border:1px solid #cfe2f7;color:#17527f;border-radius:11px;padding:12px 14px}
+  .send-note.show{display:block}
+  .send-note b{color:#0f4c81}
+  footer{text-align:center;font-size:12.5px;color:var(--muted);margin-top:30px;line-height:1.7}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);background:#1f2733;color:#fff;padding:12px 18px;border-radius:11px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100% - 32px);text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  @media(max-width:520px){.hero{padding:26px 20px 24px}.hero h1{font-size:21px}.card{padding:16px 14px 4px}.options{grid-template-columns:1fr}.btn.primary{flex:1 1 100%}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="hero">
+    <div class="brand">OMXE Technologies</div>
+    <h1>SmartBiz Market Research Questionnaire</h1>
+    <p>Help us shape SmartBiz around real business needs. On submit, your answers are saved securely, a PDF is generated, and WhatsApp opens so you can send the report to OMXE Technologies.</p>
+  </header>
+
+  <form id="surveyForm">
+    <section class="card">
+      <h2>Business details</h2>
+      <div class="field">
+        <label for="bizName">Business name <span class="req">*</span></label>
+        <input id="bizName" name="bizName" type="text" required placeholder="e.g. Nakato Hardware &amp; Supplies" autocomplete="organization">
+        <p class="hint">Used as the PDF title and in the WhatsApp message.</p>
+      </div>
+    </section>
+    <div id="questions"></div>
+    <div class="actions">
+      <button type="reset" class="btn ghost">Clear form</button>
+      <button type="submit" class="btn primary">Submit &amp; send via WhatsApp</button>
+    </div>
+    <div class="actions-foot">
+      <a class="wa-fallback" id="waFallback" href="https://wa.me/256777060110" target="blank" rel="noopener">
+        Open WhatsApp manually (+256 777 060 110)
+      </a>
+      <div class="send-note" id="sendNote" aria-live="polite"></div>
+    </div>
+  </form>
+
+  <footer>
+    OMXE Technologies &middot; Engineering Intelligence. Building Solutions.<br>
+    Contact: +256 777 060 110
+  </footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const BACKEND_URL = '';
+const WHATSAPP_NUMBER = '256777060110';
+
+const FEATURES_TABLE = '<table class="features"><thead><tr><th>Feature</th><th>What it would help you do</th></tr></thead><tbody>'
+  + '<tr><td>Sales management</td><td>Record and review daily sales.</td></tr>'
+  + '<tr><td>Inventory management</td><td>Track stock received, sold and remaining.</td></tr>'
+  + '<tr><td>Expense tracking</td><td>Record operating expenses.</td></tr>'
+  + '<tr><td>Profit reporting</td><td>Understand business income, costs and profit.</td></tr>'
+  + '<tr><td>Business reports</td><td>View daily, weekly and monthly summaries.</td></tr>'
+  + '<tr><td>Customer records</td><td>Keep useful customer and debt records.</td></tr>'
+  + '</tbody></table>';
+
+const SECTIONS = [
+  {title:
+'Section 1 — About your business', questions:[
+    {num:1,id:'q1',text:'What type of business do you operate?',type:'radio',
+     options:['Retail shop','Wholesale business','Supermarket','Hardware shop','Electronics shop','Restaurant / hotel','Pharmacy','Agricultural supplies','Other'],other:true},
+    {num:2,id:'q2',text:'How long has your business been operating?',type:'radio',
+     options:['Less than 1 year','1 – 3 years','4 – 6 years','7 – 10 years','More than 10 years']},
+    {num:3,id:'q3',text:'Approximately how many people work in the business?',type:'radio',
+     options:['1 – 2','3 – 5','6 – 10','11 – 20','More than 20']}
+  ]},
+  {title:'Section 2 — How you currently manage the business', questions:[
+    {num:4,id:'q4',text:'How do you record daily sales?',type:'radio',
+     options:['Exercise books / paper','Excel spreadsheets','Mobile application','Computer software','POS system','I do not record sales consistently']},
+    {num:5,id:'q5',text:'How do you keep track of stock or inventory?',type:'radio',
+     options:['Manual counting','Exercise books','Excel spreadsheets','Inventory software','POS system','Other'],other:true},
+    {num:6,id:'q6',text:'How do you record business expenses?',type:'radio',
+     options:['Exercise books / paper','Excel spreadsheets','Mobile application','Accounting software','Not recorded systematically','Other'],other:true},
+    {num:7,id:'q7',text:'How often do you review or calculate your business profit?',type:'radio',
+     options:['Daily','Weekly','Monthly','Quarterly','Annually','Only when necessary']},
+    {num:8,id:'q8',text:'Do you currently use business management or accounting software?',type:'radio',options:['Yes','No']},
+    {num:'8a',id:'q8a',text:'If yes, what software do you use? (Optional)',type:'text',placeholder:'e.g. QuickBooks, Excel, a POS system…'}
+  ]},
+  {title:'Section 3 — Your business challenges', questions:[
+    {num:9,id:'q9',text:'Which challenges do you experience? (Select all that apply.)',type:'checkbox',
+     options:['Calculating actual profit','Tracking stock / inventory','Missing or inaccurate sales records','Tracking expenses','Unexplained stock losses','Preparing financial reports','Understanding business growth','Tracking customer debts','Managing staff','Other'],other:true},
+    {num:10,id:'q10',text:'How often do you find differences between recorded stock and actual stock?',type:'radio',
+     options:['Daily','Weekly','Monthly','Occasionally','Never','Not applicable']},
+    {num:11,id:'q11',text:'Have you ever found that your actual profit was lower than you expected?',type:'radio',
+     options:['Frequently','Sometimes','Rarely','Never','Not sure']},
+    {num:12,id:'q12',text:'What is the ONE business-management problem you would most like to solve?',type:'textarea',rows:2},
+    {num:13,id:'q13',text:'Have record-keeping or stock-management problems ever caused losses for your business?',type:'radio',options:['Yes','No','Not sure']},
+    {num:'13a',id:'q13a',text:'If yes, you may briefly explain (optional)',type:'textarea',rows:2}
+  ]},
+  {title:'Section 4 — Your technology access', questions:[
+    {num:14,id:'q14',text:'Do you have access to a smartphone?',type:'radio',options:['Yes','No']},
+    {num:15,id:'q15',text:'Do you have access to a computer or laptop for business?',type:'radio',options:['Yes','No']},
+    {num:16,id:'q16',text:'How comfortable would you be using an app or website to manage your business?',type:'radio',
+     options:['Very comfortable','Comfortable','Somewhat comfortable','Not comfortable']},
+    {num:17,id:'q17',text:'Which language would you prefer for business software?',type:'radio',
+     options:['English','Luganda','Runyankole','Lusoga','Other'],other:true},
+    {num:18,id:'q18',text:'What might prevent you from using business software? (Select all that apply.)',type:'checkbox',
+     options:['Cost','Limited internet access','Difficulty using technology','Fear of losing data','Privacy or security concerns','Lack of training','I have no major concerns','Other'],other:true},
+    {num:19,id:'q19',text:'How important would it be for the software to work when internet access is unavailable?',type:'radio',
+     options:['Very important','Important','Not important','Not sure']}
+  ]},
+  {title:'Section 5 — Your feedback on SmartBiz',
+   note:'SmartBiz is a proposed business management platform by OMXE Technologies. The features being considered include the following:',
+   questions:[
+    {num:20,id:'q20',text:'Which THREE features would be most useful to your business?',type:'checkbox',max:3,intro:FEATURES_TABLE,
+     options:['Sales management','Inventory management','Expense tracking','Profit reporting','Business reports / analytics','Customer records']},
+    {num:21,id:'q21',text:'Would having these tools in one platform be useful to your business?',type:'radio',
+     options:['Definitely','Probably','Not sure','Probably not','Definitely not']},
+    {num:22,id:'q22',text:'How would you prefer to access SmartBiz?',type:'radio',
+     options:['Android mobile app','Website','Desktop application','Mobile app and website','No preference']},
+    {num:23,id:'q23',text:'Would you trust software to calculate business reports automatically if you could review the figures?',type:'radio',
+     options:['Yes','No','Not sure']}
+  ]},
+  {title:'Section 6 — Pricing and interest', questions:[
+    {num:24,id:'q24',text:'Would you consider paying for software that genuinely helps you manage your business?',type:'radio',options:['Yes','Maybe','No']},
+    {num:25,id:'q25',text:'Which payment method would you prefer?',type:'radio',
+     options:['Monthly subscription','Annual subscription','One-time payment','Free basic version with paid features']},
+    {num:26,id:'q26',text:'What monthly price would be reasonable for your business?',type:'radio',
+     options:['Below UGX 10,000','UGX 10,000 – 20,000','UGX 21,000 – 30,000','UGX 31,000 – 50,000','UGX 51,000 – 100,000','Above UGX 100,000','I would not pay for this software']},
+    {num:27,id:'q27',text:'Would you consider paying a setup or training fee if needed?',type:'radio',options:['Yes','No','Depends on the cost']},
+    {num:28,id:'q28',text:'What would convince you that SmartBiz is worth paying for?',type:'textarea',rows:2}
+  ]},
+  {title:'Section 7 — Final comments', questions:[
+    {num:29,id:'q29',text:'What other feature would you like SmartBiz to have?',type:'textarea',rows:2},
+    {num:30,id:'q30',text:'What one change would make managing your business easier?',type:'textarea',rows:2},
+    {num:31,id:'q31',text:'Would you be interested in trying an early version of SmartBiz and sharing feedback?',type:'radio',options:['Yes','Maybe','No']},
+    {num:32,id:'q32',text:'May OMXE Technologies contact you about a product demonstration or pilot? (Optional)',type:'radio',options:['Yes','No']},
+    {num:'32a',id:'q32a',text:'If yes, preferred contact number (optional)',type:'text',placeholder:'+256 …'}
+  ]}
+];
+
+const form = document.getElementById('surveyForm');
+const questionsWrap = document.getElementById('questions');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function renderQuestion(q){
+  const w = document.createElement('div');
+  w.className = 'q';
+  let h = `<div class="q-label"><span class="q-num">${esc(q.num)}</span><span>${esc(q.text)}</span></div>`;
+  if (q.intro) h += q.intro;
+  if (q.type === 'radio' || q.type === 'checkbox'){
+    h += '<div class="options">';
+    q.options.forEach((opt,i)=>{
+      const id = `${q.id}_${i}`;
+      h += `<label class="opt" for="${id}"><input type="${q.type}" id="${id}" name="${q.id}" value="${esc(opt)}"><span>${esc(opt)}</span></label>`;
+    });
+    h += '</div>';
+    if (q.other) h += `<input class="other-input" data-for="${q.id}" type="text" placeholder="Please specify…" hidden>`;
+    if (q.max)   h += `<p class="hint">Select up to ${q.max} options.</p>`;
+  } else if (q.type === 'text'){
+    h += `<input class="text-input" type="text" id="${q.id}" name="${q.id}" placeholder="${esc(q.placeholder||'')}">`;
+  } else if (q.type === 'textarea'){
+    h += `<textarea class="text-input" id="${q.id}" name="${q.id}" rows="${q.rows||3}" placeholder="${esc(q.placeholder||'')}"></textarea>`;
+  } 
+  w.innerHTML = h;
+  return w;
+}
+
+SECTIONS.forEach(sec=>{
+  const card = document.createElement('section');
+  card.className = 'card';
+  const h2 = document.createElement('h2');
+  h2.textContent = sec.title;
+  card.appendChild(h2);
+  if (sec.note){
+    const p = document.createElement('p');
+    p.className = 'note';
+    p.textContent = sec.note;
+    card.appendChild(p);
+  }
+  sec.questions.forEach(q=>card.appendChild(renderQuestion(q)));
+  questionsWrap.appendChild(card);
+});
+
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+function updateLabelStyles(){
+  form.querySelectorAll('.opt').forEach(l=>{
+    const i = l.querySelector('input');
+    l.classList.toggle('checked', !!(i && i.checked));
+  });
+}
+
+form.addEventListener('change', e=>{
+  const t = e.target;
+  if (t.type !== 'radio' && t.type !== 'checkbox') return;
+  const box = form.querySelector(`.other-input[data-for="${t.name}"]`);
+  if (box){
+    const grp = [...form.querySelectorAll(`input[name="${t.name}"]`)];
+    const anyOther = grp.some(i=>i.value==='Other' && i.checked);
+    if (box.hidden === anyOther){
+      box.hidden = !anyOther;
+      if (anyOther && t.value==='Other' && t.checked) box.focus();
+    }
+    if (!anyOther) box.value = '';
+  }
+  if (t.type === 'checkbox' && t.name === 'q20'){
+    const n = form.querySelectorAll('input[name="q20"]:checked').length;
+    if (n > 3){ t.checked = false; showToast('Please choose only three features.'); }
+  }
+  updateLabelStyles();
+});
+
+form.addEventListener('reset', ()=>{
+  setTimeout(()=>{
+    form.querySelectorAll('.other-input').forEach(i=>{i.hidden=true;i.value='';});
+    document.getElementById('waFallback').classList.remove('show');
+    document.getElementById('sendNote').classList.remove('show');
+    updateLabelStyles();
+  },0);
+});
+
+updateLabelStyles();
+
+function collectAnswer(q){
+  if (q.type === 'radio'){
+    const el = form.querySelector(`input[name="${q.id}"]:checked`);
+    if (!el) return null;
+    let v = el.value;
+    if (q.other && v === 'Other'){
+      const b = form.querySelector(`.other-input[data-for="${q.id}"]`);
+      if (b && b.value.trim()) v = 'Other: ' + b.value.trim();
+    }
+    return v;
+  }
+  if (q.type === 'checkbox'){
+    const els = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)];
+    let vals = els.map(e=>e.value);
+    if (q.other && vals.includes('Other')){
+      const b = form.querySelector(`.other-input[data-for="${q.id}"]`);
+      const extra = b ? b.value.trim() : '';
+      if (extra) vals = vals.map(v=>v==='Other' ? 'Other: '+extra : v);
+    }
+    return vals.length ? vals.join('; ') : null;
+  }
+  const el = form.querySelector(`[name="${q.id}"]`);
+  const v = el ? el.value.trim() : '';
+  return v || null;
+}
+
+function collectAllAnswers(){
+  const out = {};
+  SECTIONS.forEach(sec=>{
+    sec.questions.forEach(q=>{
+      const val = collectAnswer(q);
+      if (val) out[q.id] = { question: q.text, answer: val };
+    });
+  });
+  return out;
+}
+
+function generatePDF(businessName){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'pt', format:'a4', compress:true });
+  const PW = doc.internal.pageSize.getWidth();
+  const PH = doc.internal.pageSize.getHeight();
+  const M = 46, BOTTOM = PH - 58;
+  let y = M;
+  const INK=[31,39,51], BRAND=[15,76,129], ACCENT=[26,158,120], MUTED=[110,120,135], GHOST=[160,166,176];
+  const today = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'});
+
+  const ensure = h => { if (y + h > BOTTOM){ doc.addPage(); y = M; } };
+  
+  // Basic top header rendering
+  doc.setTextColor(...BRAND); doc.setFontSize(16); doc.setFont("helvetica", "bold");
+  doc.text("SmartBiz Market Research Questionnaire", M, y); y += 22;
+  doc.setTextColor(...INK); doc.setFontSize(11); doc.setFont("helvetica", "normal");
+  doc.text(`Business Name: ${businessName}`, M, y); y += 15;
+  doc.text(`Completed on: ${today}`, M, y); y += 25;
+  
+  SECTIONS.forEach(sec=>{
+    ensure(30);
+    doc.setFont("helvetica", "bold"); doc.setTextColor(...BRAND);
+    doc.text(sec.title, M, y); y += 18;
+    doc.setFont("helvetica", "normal"); doc.setTextColor(...INK);
+    sec.questions.forEach(q=>{
+      const ansObj = collectAnswer(q);
+      if(ansObj){
+        ensure(22);
+        doc.text(`${q.num}. ${q.text} -> ${ansObj}`, M, y);
+        y += 15;
+      }
+    });
+    y += 10;
+  });
+  
+  return doc.output('datauristring');
+}
+
+form.addEventListener('submit', async e=>{
+  e.preventDefault();
+  const bizName = document.getElementById('bizName').value.trim();
+  const answers = collectAllAnswers();
+
+  try {
+    const r = await fetch(BACKEND_URL + '/api/submissions', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ businessName: bizName, answers })
+    });
+    const data = await r.json();
+    if (!r.ok || !data.ok) throw new Error(data.error || 'Server rejected submission');
+
+    showToast('Form saved successfully!');
+    
+    // Generate PDF URI and direct user to WhatsApp
+    const pdfDataUri = generatePDF(bizName);
+    const textMsg = `Hello OMXE Technologies, here are the SmartBiz questionnaire results for *${bizName}* (ID: ${data.id}). PDF: ${pdfDataUri.substring(0, 100)}...`;
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(textMsg)}`;
+    
+    document.getElementById('waFallback').href = waUrl;
+    document.getElementById('waFallback').classList.add('show');
+    
+    const infoEl = document.getElementById('sendNote');
+    infoEl.innerHTML = `<b>Success!</b> Saved to server with ID: <b>${data.id}</b>. Click the WhatsApp button above to submit the report.`;
+    infoEl.classList.add('show');
+    
+    window.open(waUrl, '_blank');
+  } catch (err) {
+    console.error(err);
+    showToast('Failed to save to database. Showing backup options...');
+  }
+});
+</script>
+</body>
+</html>
