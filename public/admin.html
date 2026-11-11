@@ -58,7 +58,7 @@
 <div class="wrap">
   <header>
     <h1>SmartBiz — Submissions<small>OMXE Technologies · internal dashboard</small></h1>
-    <button id="logoutBtn" class="btn" style="display:none">Lock</button>
+    <div style="display:flex;gap:8px"><button id="csvBtn" class="btn" style="display:none">Download CSV</button><button id="logoutBtn" class="btn" style="display:none">Lock</button></div>
   </header>
 
   <!-- Auth panel -->
@@ -112,6 +112,8 @@ function fmtDate(sql){
 function setAuthed(on){
   authPanel.hidden = on;
   logoutBtn.style.display = on ? '' : 'none';
+  const csvBtn = document.getElementById('csvBtn');
+  if (csvBtn) csvBtn.style.display = on ? '' : 'none';
   if (!on) content.innerHTML = '';
 }
 
@@ -260,6 +262,44 @@ async function toggle(id, tr){
     detail.querySelector('td').innerHTML = '<div class="state error">Could not load answers: ' + esc(err.message) + '</div>';
   }
 }
+
+
+/* ---------- CSV download ---------- */
+(function(){
+  const csvBtn = document.getElementById('csvBtn');
+  if (!csvBtn) return;
+  csvBtn.addEventListener('click', async () => {
+    csvBtn.disabled = true;
+    const original = csvBtn.textContent;
+    csvBtn.textContent = 'Preparing…';
+    try {
+      const res = await fetch(API + '/api/submissions.csv', {
+        headers: { 'x-admin-token': TOKEN }
+      });
+      if (res.status === 401) {
+        sessionStorage.removeItem('smartbiz_admin');
+        TOKEN = '';
+        setAuthed(false);
+        throw new Error('Token rejected — please log in again');
+      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'smartbiz_submissions_' + new Date().toISOString().slice(0,10) + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+      toast('CSV downloaded');
+    } catch (err) {
+      toast('CSV download failed: ' + err.message);
+    } finally {
+      csvBtn.disabled = false;
+      csvBtn.textContent = original;
+    }
+  });
+})();
 
 /* ---------- boot ---------- */
 (function boot(){
